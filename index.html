@@ -3,111 +3,313 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Гранатовая охота</title>
-<meta name="theme-color" content="#1a1512">
+<title>ГРАНАТ · охота отряда</title>
+<meta name="theme-color" content="#0b0716">
 <style>
 :root{
-  --stone:#2b2420; --stone-2:#3a302a; --sand:#e8e0d0; --sand-dim:#b5a992;
-  --garnet:#c8323f; --garnet-deep:#7d1a23; --ember:#e08a2e; --moss:#6f9b3f;
-  --r:14px;
+  --void:#0b0716; --ink:#07040f; --panel:#17102b; --panel-2:#221640;
+  --magenta:#ff2d95; --cyan:#3df0ff; --lime:#b6ff3d; --violet:#8b5cf6;
+  --garnet:#ff2e4d; --cream:#fff3e6; --dim:#a494c9;
+  --r:16px;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;background:#1a1512;color:var(--sand);
+html,body{margin:0;background:var(--void);color:var(--cream);
   font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  font-size:17px;line-height:1.5;overscroll-behavior:none}
-body{padding:14px 14px 90px;max-width:560px;margin:0 auto}
-h1{font-size:25px;font-weight:600;letter-spacing:-.4px;margin:2px 0 2px}
-.sub{color:var(--sand-dim);font-size:14px;margin-bottom:14px}
-.card{background:var(--stone);border-radius:var(--r);padding:14px;margin-bottom:12px}
+  font-size:17px;line-height:1.45;overscroll-behavior-y:none}
+
+/* ---------- дримкор-фон: цветные пятна + зерно + скан-линии ---------- */
+body::before{content:"";position:fixed;inset:-20%;z-index:-2;
+  background:
+    radial-gradient(38% 30% at 18% 12%, rgba(255,45,149,.42), transparent 70%),
+    radial-gradient(42% 34% at 84% 22%, rgba(61,240,255,.32), transparent 70%),
+    radial-gradient(46% 38% at 30% 88%, rgba(139,92,246,.40), transparent 72%),
+    radial-gradient(34% 26% at 78% 76%, rgba(182,255,61,.20), transparent 70%);
+  filter:blur(12px);animation:drift 26s ease-in-out infinite alternate}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.32;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(0deg, rgba(0,0,0,.22) 0 1px, transparent 1px 3px)}
+@keyframes drift{from{transform:translate3d(-2%,-1%,0) scale(1)}to{transform:translate3d(2%,2%,0) scale(1.12)}}
+
+body{padding:14px 14px 96px;max-width:600px;margin:0 auto;position:relative}
+
+/* ---------- типографика граффити ---------- */
+.tag{font-weight:900;letter-spacing:-1.5px;text-transform:uppercase;font-style:italic;
+  line-height:.92;transform:skewX(-7deg);
+  text-shadow:2px 0 var(--cyan), -2px 0 var(--magenta), 4px 4px 0 var(--ink)}
+h1.tag{font-size:34px;margin:4px 0 2px}
+.sub{color:var(--cyan);font-size:13px;letter-spacing:1.6px;text-transform:uppercase;
+  font-weight:700;margin-bottom:14px}
+.spray{-webkit-text-stroke:1px var(--ink)}
+
+/* ---------- панели комикса ---------- */
+.panel{background:linear-gradient(160deg,var(--panel),var(--panel-2));
+  border:3px solid var(--ink);border-radius:var(--r);padding:14px;margin-bottom:14px;
+  box-shadow:6px 6px 0 var(--ink), 0 0 0 1px rgba(255,255,255,.07) inset;position:relative;overflow:hidden}
+.panel::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.16;
+  background-image:radial-gradient(currentColor 1px, transparent 1.4px);background-size:7px 7px;color:var(--magenta)}
+.panel.hot{border-color:var(--garnet);box-shadow:6px 6px 0 #48000e}
+.panel .num{position:absolute;top:-6px;right:8px;font-size:46px;font-weight:900;font-style:italic;
+  color:rgba(255,255,255,.07);letter-spacing:-3px}
+.lab{font-size:12px;letter-spacing:1.6px;text-transform:uppercase;color:var(--cyan);font-weight:800;margin-bottom:8px}
+.lab.pink{color:var(--magenta)}
+.lab.lime{color:var(--lime)}
+
+/* ---------- баббл ---------- */
+.bubble{background:var(--cream);color:#1b0f2b;border:3px solid var(--ink);border-radius:14px;
+  padding:11px 13px;font-size:15px;font-weight:600;position:relative;margin:10px 0 4px}
+.bubble::after{content:"";position:absolute;left:24px;bottom:-13px;width:0;height:0;
+  border:7px solid transparent;border-top:13px solid var(--ink)}
+.bubble b{background:linear-gradient(transparent 60%, #ffd84d 60%)}
+.bubble .who{display:block;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;
+  color:#7a3bd0;font-weight:900;margin-bottom:3px}
+
+/* ---------- кнопки ---------- */
 button{font:inherit;color:inherit;border:none;background:none;cursor:pointer}
-.btn{display:block;width:100%;padding:15px;border-radius:var(--r);
-  background:var(--garnet);color:#fff;font-weight:600;font-size:17px;text-align:center}
-.btn:active{background:var(--garnet-deep)}
-.btn.ghost{background:var(--stone-2);color:var(--sand)}
+.btn{display:block;width:100%;padding:15px;border-radius:14px;border:3px solid var(--ink);
+  background:linear-gradient(180deg,var(--magenta),#c2136e);color:#fff;font-weight:900;font-size:17px;
+  text-transform:uppercase;letter-spacing:.6px;box-shadow:4px 4px 0 var(--ink);transition:transform .06s}
+.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+.btn.ghost{background:linear-gradient(180deg,#2e2050,#1d1436);color:var(--cream)}
+.btn.cy{background:linear-gradient(180deg,var(--cyan),#0e8aa3);color:#05202a}
 .row{display:flex;gap:10px}
 .row>*{flex:1}
-.lab{font-size:13px;color:var(--sand-dim);margin-bottom:6px}
-.big{font-size:40px;font-weight:600;letter-spacing:-1.5px;line-height:1}
-.unit{font-size:16px;color:var(--sand-dim);font-weight:400}
-svg{display:block;width:100%}
+
+/* ---------- компас ---------- */
 .dir{display:flex;align-items:center;gap:14px}
-.needle{width:86px;height:86px;flex:0 0 86px;background:var(--stone-2);border-radius:50%}
-.q{display:flex;gap:11px;padding:11px 0;border-top:1px solid #40352e}
+.needle{width:96px;height:96px;flex:0 0 96px;filter:drop-shadow(0 0 10px rgba(255,45,149,.55))}
+.big{font-size:44px;font-weight:900;font-style:italic;letter-spacing:-2px;line-height:1;
+  text-shadow:2px 2px 0 var(--ink)}
+.unit{font-size:16px;color:var(--dim);font-weight:700;font-style:normal}
+svg{display:block;width:100%}
+
+/* ---------- герои ---------- */
+.crew{display:flex;gap:9px}
+.hero{flex:1;background:#120c24;border:3px solid var(--ink);border-radius:14px;padding:8px 6px 9px;
+  text-align:center;position:relative;box-shadow:3px 3px 0 var(--ink)}
+.hero.act{outline:3px solid var(--lime);outline-offset:2px}
+.hero .av{width:100%;height:auto;margin-bottom:2px}
+.hero .nm{font-size:11px;letter-spacing:.6px;text-transform:uppercase;font-weight:900;
+  width:100%;background:none;border:none;text-align:center;font-family:inherit;padding:2px 0;color:var(--cream)}
+.hero .role{font-size:10px;color:var(--dim);letter-spacing:.4px;min-height:24px}
+.hero .c{font-size:26px;font-weight:900;font-style:italic;margin:2px 0 5px;text-shadow:1px 1px 0 var(--ink)}
+.hero .add{background:linear-gradient(180deg,var(--lime),#7db51f);color:#132000;border:2px solid var(--ink);
+  border-radius:9px;padding:8px 0;font-size:15px;font-weight:900;width:100%;box-shadow:2px 2px 0 var(--ink)}
+.hero .add:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink)}
+.hero .pw{margin-top:5px;font-size:10px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;
+  background:#2b1b4d;border:2px solid var(--ink);border-radius:8px;padding:6px 2px;width:100%;color:var(--cyan)}
+.hero .pw.off{color:#6b5b90}
+.hero .minus{position:absolute;top:4px;left:6px;font-size:15px;color:#6b5b90;padding:2px 6px;line-height:1}
+
+/* ---------- квесты ---------- */
+.q{display:flex;gap:11px;padding:12px 0;border-top:2px dashed #382a5e}
 .q:first-of-type{border-top:none}
-.q .mark{flex:0 0 24px;height:24px;border-radius:50%;background:var(--stone-2);
-  display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--sand-dim);margin-top:2px}
-.q.done .mark{background:var(--moss);color:#14200a}
-.q.now .mark{background:var(--ember);color:#2b1a02}
-.q .txt{font-size:15px}
-.q.done .txt{color:var(--sand-dim);text-decoration:line-through}
-.q .hint{font-size:13px;color:var(--sand-dim);margin-top:2px;text-decoration:none;display:block}
-.players{display:flex;gap:8px}
-.pl{flex:1;background:var(--stone-2);border-radius:12px;padding:10px 8px;text-align:center}
-.pl .n{font-size:13px;color:var(--sand-dim);width:100%;background:none;border:none;
-  text-align:center;font-family:inherit;padding:0}
-.pl .c{font-size:27px;font-weight:600;margin:3px 0 6px}
-.pl .add{background:var(--garnet-deep);border-radius:9px;padding:9px 0;font-size:15px;width:100%;color:#fff}
-.shots{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
-.shots img{width:66px;height:66px;object-fit:cover;border-radius:10px}
-.bar{position:fixed;left:0;right:0;bottom:0;background:#120e0c;
-  padding:10px 14px calc(10px + env(safe-area-inset-bottom));display:flex;gap:10px;
-  max-width:560px;margin:0 auto}
-.bar button{flex:1;background:var(--stone);border-radius:12px;padding:12px 6px;font-size:13px;text-align:center}
-.bar button.on{background:var(--garnet)}
-.rank{font-size:14px;color:var(--ember)}
-.warn{background:#3a1a1a;color:#f0b8b8;font-size:14px;border-radius:12px;padding:11px 13px;margin-bottom:12px}
-label.file{display:block;width:100%;padding:13px;border-radius:var(--r);background:var(--stone-2);
-  text-align:center;font-size:15px;margin-top:10px}
+.q .mark{flex:0 0 28px;height:28px;border-radius:9px;border:2px solid var(--ink);background:#2a1c4d;
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:var(--dim);margin-top:2px}
+.q.done .mark{background:var(--lime);color:#132000}
+.q.now .mark{background:var(--magenta);color:#fff;animation:pulse 1.4s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 7px rgba(255,45,149,.18)}}
+.q .txt{font-size:15px;font-weight:700}
+.q.done .txt{color:var(--dim);text-decoration:line-through}
+.q .hint{display:block;font-size:13px;font-weight:500;color:var(--dim);margin-top:3px;text-decoration:none}
+.q .why{display:block;font-size:13px;font-weight:600;color:var(--cyan);margin-top:4px;text-decoration:none}
+.q .who{display:inline-block;font-size:10px;font-weight:900;letter-spacing:.8px;text-transform:uppercase;
+  padding:2px 6px;border-radius:6px;margin-right:6px;vertical-align:2px;color:#12081f}
+
+/* ---------- фото ---------- */
+.shots{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
+.shots .po{background:var(--cream);padding:5px 5px 16px;border:2px solid var(--ink);border-radius:4px;
+  box-shadow:3px 3px 0 rgba(0,0,0,.5);transform:rotate(-3deg)}
+.shots .po:nth-child(even){transform:rotate(3deg)}
+.shots img{width:70px;height:70px;object-fit:cover;display:block}
+label.file{display:block;width:100%;padding:13px;border-radius:14px;border:3px dashed #4b3a7d;
+  background:#160f2c;text-align:center;font-size:14px;font-weight:800;text-transform:uppercase;
+  letter-spacing:1px;color:var(--cyan);margin-top:10px}
 input[type=file]{display:none}
+
+/* ---------- бейджи ---------- */
+.badges{display:flex;gap:7px;flex-wrap:wrap}
+.bg{font-size:11px;font-weight:900;letter-spacing:.6px;text-transform:uppercase;padding:7px 9px;
+  border:2px solid var(--ink);border-radius:10px;background:#241743;color:#6b5b90}
+.bg.on{background:linear-gradient(180deg,var(--cyan),#0e8aa3);color:#04222c;box-shadow:2px 2px 0 var(--ink)}
+
+/* ---------- нижняя панель ---------- */
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:5;background:rgba(7,4,15,.94);
+  backdrop-filter:blur(8px);border-top:3px solid var(--ink);
+  padding:9px 12px calc(9px + env(safe-area-inset-bottom));display:flex;gap:8px;
+  max-width:600px;margin:0 auto}
+.bar button{flex:1;background:#1d1436;border:2px solid var(--ink);border-radius:11px;padding:11px 4px;
+  font-size:11px;font-weight:900;letter-spacing:.4px;text-transform:uppercase;text-align:center}
+.bar button.on{background:linear-gradient(180deg,var(--lime),#7db51f);color:#132000}
+.warn{background:#3d0a1c;border:3px solid var(--garnet);color:#ffc9d5;font-size:14px;font-weight:600;
+  border-radius:14px;padding:11px 13px;margin-bottom:14px}
+
+/* ---------- интро-комикс ---------- */
+#intro{position:fixed;inset:0;z-index:20;background:var(--void);overflow-y:auto;
+  padding:16px 14px calc(96px + env(safe-area-inset-bottom))}
+#intro .inner{max-width:600px;margin:0 auto}
+.strip{border:3px solid var(--ink);border-radius:var(--r);box-shadow:6px 6px 0 var(--ink);
+  background:linear-gradient(150deg,#1d1338,#2b1a52);padding:16px;margin-bottom:14px;position:relative}
+.strip .kicker{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--lime);font-weight:900}
+.strip h2{font-size:23px;margin:6px 0 8px;font-weight:900;font-style:italic;letter-spacing:-.6px;
+  text-shadow:2px 2px 0 var(--ink)}
+.strip p{margin:0 0 8px;font-size:15px}
+.strip .fine{font-size:13px;color:var(--dim)}
+.pager{display:flex;gap:6px;justify-content:center;margin:4px 0 12px}
+.pager i{width:8px;height:8px;border-radius:50%;background:#3a2a63;display:block}
+.pager i.on{background:var(--magenta);width:22px;border-radius:4px}
+.pick{display:flex;gap:9px}
+.pick .hero{flex:1}
+@media (prefers-reduced-motion:reduce){
+  body::before{animation:none}
+  .q.now .mark{animation:none}
+}
 </style>
 </head>
 <body>
 
-<h1>Гранатовая охота</h1>
-<div class="sub" id="rank">Подседице — Држемчице · старатель без единого камня</div>
+<!-- ================= ИНТРО-КОМИКС ================= -->
+<div id="intro" hidden><div class="inner">
+  <h1 class="tag">Гранатовая<br>охота</h1>
+  <div class="sub">комикс-квест · 3 героя · поле у подседице</div>
 
-<div class="warn" id="geowarn">Нажми «Включить GPS» внизу — без него стрелка и зоны не работают.</div>
+  <div class="pager" id="pager"></div>
+  <div id="strip"></div>
 
-<div class="card">
-  <div class="lab" id="targetName">Цель не выбрана</div>
+  <div class="row" style="margin-top:6px">
+    <button class="btn ghost" id="introBack">Назад</button>
+    <button class="btn" id="introNext">Дальше</button>
+  </div>
+</div></div>
+
+<!-- ================= ИГРА ================= -->
+<h1 class="tag">Гранатовая охота</h1>
+<div class="sub" id="rank">отряд · старатели без камня</div>
+
+<div class="warn" id="geowarn">Жми «GPS» внизу — без него стрелка и зоны спят.</div>
+
+<div class="panel hot" id="navPanel">
+  <div class="num">01</div>
+  <div class="lab pink" id="targetName">цель не выбрана</div>
   <div class="dir">
     <svg class="needle" viewBox="0 0 100 100" id="needle">
-      <circle cx="50" cy="50" r="48" fill="#3a302a"/>
+      <defs>
+        <linearGradient id="ng" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ff2d95"/><stop offset="1" stop-color="#3df0ff"/>
+        </linearGradient>
+      </defs>
+      <circle cx="50" cy="50" r="46" fill="#120c24" stroke="#07040f" stroke-width="5"/>
+      <circle cx="50" cy="50" r="38" fill="none" stroke="#3a2a63" stroke-width="2" stroke-dasharray="3 5"/>
       <g id="needleRot">
-        <path d="M50 14 L64 62 L50 54 L36 62 Z" fill="#c8323f"/>
+        <path d="M50 12 L66 64 L50 55 L34 64 Z" fill="url(#ng)" stroke="#07040f" stroke-width="3" stroke-linejoin="round"/>
       </g>
-      <circle cx="50" cy="50" r="4" fill="#e8e0d0"/>
+      <circle cx="50" cy="50" r="5" fill="#fff3e6" stroke="#07040f" stroke-width="2"/>
     </svg>
     <div>
       <div class="big"><span id="dist">—</span> <span class="unit" id="distUnit">м</span></div>
-      <div class="lab" id="dirWord" style="margin:6px 0 0">ждём спутники</div>
+      <div class="lab lime" id="dirWord" style="margin:8px 0 0">ждём спутники</div>
     </div>
+  </div>
+  <div class="bubble" id="sayBubble"><span class="who" id="sayWho">штаб</span><span id="sayText">Собрались? Тогда вперёд за красными камнями.</span></div>
+</div>
+
+<div class="panel">
+  <div class="num">02</div>
+  <div class="lab">карта поля · красное = богато</div>
+  <svg viewBox="0 0 340 230" id="map" role="img" aria-label="Схема поля с зонами поиска"></svg>
+  <div class="bubble" style="margin-bottom:0">
+    <span class="who">пояснение</span>
+    Зелёная точка — вы. Голубое кольцо — куда идём сейчас. Красные пятна — где гранатов больше всего, оранжевые пунктиром — где поменьше.
   </div>
 </div>
 
-<div class="card">
-  <div class="lab">Карта поля — красные пятна самые богатые</div>
-  <svg viewBox="0 0 340 230" id="map" role="img" aria-label="Схема поля с зонами поиска"></svg>
-</div>
-
-<div class="card">
-  <div class="lab">Кто сколько нашёл</div>
-  <div class="players" id="players"></div>
-  <label class="file">Снять находку
+<div class="panel">
+  <div class="num">03</div>
+  <div class="lab lime">отряд · жми «+1» на того, кто нашёл</div>
+  <div class="crew" id="crew"></div>
+  <label class="file">＋ снять находку
     <input type="file" accept="image/*" capture="environment" id="cam">
   </label>
   <div class="shots" id="shots"></div>
 </div>
 
-<div class="card" id="quests"></div>
+<div class="panel">
+  <div class="num">04</div>
+  <div class="lab pink">задания отряда</div>
+  <div id="quests"></div>
+</div>
+
+<div class="panel">
+  <div class="num">05</div>
+  <div class="lab">значки отряда</div>
+  <div class="badges" id="badges"></div>
+</div>
 
 <div class="bar">
-  <button id="gpsBtn">Включить GPS</button>
-  <button id="voiceBtn" class="on">Голос вкл</button>
-  <button id="resetBtn">Сброс</button>
+  <button id="gpsBtn">GPS</button>
+  <button id="voiceBtn" class="on">голос</button>
+  <button id="comicBtn">комикс</button>
+  <button id="resetBtn">сброс</button>
 </div>
 
 <script>
+/* =========================================================
+   ГРАНАТОВАЯ ОХОТА · комикс-режим
+   один файл, ноль зависимостей, ноль сети
+   ========================================================= */
+
+/* ---------- герои: рисованные аватары по фото отряда ---------- */
+function AV(o){
+  return '<svg class="av" viewBox="0 0 100 118">'+
+  '<rect x="2" y="2" width="96" height="114" rx="12" fill="'+o.bg+'" stroke="#07040f" stroke-width="4"/>'+
+  '<circle cx="50" cy="96" r="34" fill="'+o.body+'" stroke="#07040f" stroke-width="3"/>'+
+  (o.jacket?'<path d="M16 118 L16 92 Q50 74 84 92 L84 118 Z" fill="'+o.jacket+'" stroke="#07040f" stroke-width="3"/>'+
+            '<path d="M50 78 L38 118 L62 118 Z" fill="'+o.body+'" stroke="#07040f" stroke-width="2"/>':'')+
+  '<ellipse cx="50" cy="52" rx="26" ry="28" fill="#ffd9be" stroke="#07040f" stroke-width="3"/>'+
+  '<path d="M24 40 Q50 24 76 40 L76 46 Q50 34 24 46 Z" fill="'+o.hair+'" stroke="#07040f" stroke-width="3"/>'+
+  '<path d="M22 40 Q50 14 78 40 L78 44 Q50 30 22 44 Z" fill="'+o.cap+'" stroke="#07040f" stroke-width="3"/>'+
+  '<path d="M22 42 Q46 46 '+(o.peak=='l'?'6':'92')+' 50 Q46 56 22 50 Z" fill="'+o.cap+'" stroke="#07040f" stroke-width="3"/>'+
+  '<circle cx="50" cy="30" r="4" fill="'+o.logo+'" stroke="#07040f" stroke-width="2"/>'+
+  (o.glass?'<g stroke="#07040f" stroke-width="3" fill="rgba(61,240,255,.30)">'+
+     '<rect x="27" y="50" width="19" height="15" rx="5"/><rect x="54" y="50" width="19" height="15" rx="5"/>'+
+     '<path d="M46 56 h8"/></g>':'')+
+  '<circle cx="39" cy="57" r="'+(o.glass?2.6:4)+'" fill="#07040f"/>'+
+  '<circle cx="63" cy="57" r="'+(o.glass?2.6:4)+'" fill="#07040f"/>'+
+  '<circle cx="40.5" cy="55.5" r="1.3" fill="#fff"/><circle cx="64.5" cy="55.5" r="1.3" fill="#fff"/>'+
+  '<path d="M42 70 Q50 76 58 70" stroke="#07040f" stroke-width="3" fill="none" stroke-linecap="round"/>'+
+  (o.tool||'')+
+  '</svg>';
+}
+var AVATARS=[
+  AV({bg:"#2a1b52",body:"#5b6b7d",jacket:"#2f6fd0",hair:"#6b4426",cap:"#e6dcc3",logo:"#ff9f1c",peak:"l"}),
+  AV({bg:"#1b2a52",body:"#14121c",jacket:"",hair:"#c9a86b",cap:"#14121c",logo:"#3df0ff",peak:"r"}),
+  AV({bg:"#20304a",body:"#f2f2f2",jacket:"#9aa3ad",hair:"#3a2a1c",cap:"#6d7a4a",logo:"#b6ff3d",peak:"r",glass:1,
+      tool:'<path d="M84 30 L96 66" stroke="#07040f" stroke-width="6" stroke-linecap="round"/>'+
+           '<path d="M80 22 l10 -4 4 12 -10 4 z" fill="#cfd6dd" stroke="#07040f" stroke-width="3"/>'})
+];
+
+var HEROES=[
+  {def:"КАПИ", role:"сканер · ведёт детектор",
+   pw:"скан", color:"#3df0ff",
+   say:"Сканирую поле. Идём медленно, катушку держим у самой земли."},
+  {def:"ТЕНЬ", role:"следопыт · читает землю",
+   pw:"чуйка", color:"#ff2d95",
+   say:"Чуйка сработала. Смотрим туда, где земля свежая и камешки блестят."},
+  {def:"ЛИНЗА", role:"копатель · бьёт по комкам",
+   pw:"разлом", color:"#b6ff3d",
+   say:"Разлом запущен. Три минуты каждый камень считаем за два."}
+];
+var PW_CD=900000, X2_MS=180000;
+
+var TIPS=[
+ "Встань спиной к солнцу — гранат вспыхнет красным.",
+ "Ищи в ямках за камнями: гранат тяжёлый и всегда скатывается вниз.",
+ "Свежая борозда лучше старой: земля перевёрнута, камни наверху.",
+ "Смотри под ноги на два шага вперёд, а не вдаль. Шаг — взгляд — шаг.",
+ "Мокрый камень виден лучше. Плюнь на находку или смочи водой.",
+ "Гранат не царапается ногтем и не крошится. Красное стекло — крошится."
+];
+
+/* ---------- точки маршрута: координаты выверены по месту, не трогать ---------- */
 var TARGETS=[
  {id:"park",name:"Парковка в Подседице",lat:50.47199,lon:13.94830,r:130,kind:"way",
   say:"Приехали. Ставь машину у площади, дальше пешком на запад."},
@@ -127,32 +329,108 @@ var TARGETS=[
   say:"Парковка под Газмбурком. Сорок крон монетами. Наверх полчаса, успеваем на закат."}
 ];
 
+/* ---------- задания: txt — что делать, why — зачем, детям понятным языком ---------- */
 var QUESTS=[
- {id:"q_park",txt:"Доехать до Подседице и встать у площади",hint:"50.47199, 13.94830",tgt:"park"},
- {id:"q_road",txt:"Найти грунтовку и уйти с асфальта",hint:"метров 500 на запад от края деревни",tgt:"road"},
- {id:"q_zone",txt:"Войти в первую красную зону",hint:"стрелка наверху доведёт",tgt:"z1"},
- {id:"q_first",txt:"Найти первый гранат",hint:"красное зерно 2–6 мм, блестит против света",count:1},
- {id:"q_photo",txt:"Снять находку на камеру",hint:"кнопка «снять находку»",photo:1},
- {id:"q_five",txt:"Набрать пять камней на всех",hint:"проверяем дома в воде",count:5},
- {id:"q_second",txt:"Дойти до пашни — главной зоны",hint:"ещё 500 метров по дороге",tgt:"z2"},
- {id:"q_ten",txt:"Набрать десять камней",hint:"это уже полноценный улов",count:10},
- {id:"q_back",txt:"Дойти до Држемчице и развернуться",hint:"обратно по другой стороне",tgt:"drem"},
- {id:"q_hazm",txt:"Доехать до Газмбурка на закат",hint:"подъём 25–30 минут",tgt:"hazm"}
+ {id:"q_park",txt:"Доехать до Подседице и встать у площади",hint:"50.47199, 13.94830",
+  why:"Отсюда стартует весь маршрут: дальше машина не нужна.",tgt:"park"},
+ {id:"q_road",txt:"Найти грунтовку и уйти с асфальта",hint:"метров 500 на запад от края деревни",
+  why:"Гранаты лежат в пашне, а не у дороги. Асфальт — не наша территория.",tgt:"road"},
+ {id:"q_zone",txt:"Войти в первую красную зону — ручей",hint:"стрелка наверху доведёт",
+  why:"Вода веками сортирует камни: тяжёлый гранат остаётся в гравии.",tgt:"z1"},
+ {id:"q_first",txt:"Найти первый гранат",hint:"красное зерно 2–6 мм, блестит против света",
+  why:"Первый камень настраивает глаз: дальше начнёшь замечать остальные.",count:1},
+ {id:"q_kapi",txt:"КАПИ берёт свои три камня",hint:"сканер работает медленно и ровно",
+  why:"У каждого героя своя доля — иначе весь улов заберёт один.",heroCount:{i:0,n:3}},
+ {id:"q_photo",txt:"Снять находку на камеру",hint:"кнопка «снять находку»",
+  why:"Фото — доказательство. Дома сверим, что нашли именно пироп.",photo:1},
+ {id:"q_five",txt:"Пять камней на весь отряд",hint:"проверяем дома в воде",
+  why:"Пять штук — уже коллекция, а не случайность.",count:5},
+ {id:"q_shadow",txt:"ТЕНЬ берёт свои три камня",hint:"ищи свежую землю и блеск",
+  why:"Следопыт читает борозду: где земля перевёрнута, там камни наверху.",heroCount:{i:1,n:3}},
+ {id:"q_second",txt:"Дойти до пашни — главной зоны",hint:"ещё 500 метров по дороге",
+  why:"Пашня — самое богатое место маршрута, сюда идём за основным уловом.",tgt:"z2"},
+ {id:"q_linza",txt:"ЛИНЗА берёт свои три камня",hint:"бей по плотным комкам, не по земле",
+  why:"Комок глины часто держит гранат внутри — его надо разломить.",heroCount:{i:2,n:3}},
+ {id:"q_ten",txt:"Десять камней на отряд",hint:"это уже полноценный улов",
+  why:"Десять — рубеж, после которого отряд получает баронский ранг.",count:10},
+ {id:"q_back",txt:"Дойти до Држемчице и развернуться",hint:"обратно по другой стороне",
+  why:"Второй заход по другой стороне дороги даёт свежую полосу поиска.",tgt:"drem"},
+ {id:"q_hazm",txt:"Доехать до Газмбурка на закат",hint:"подъём 25–30 минут",
+  why:"Финал дня: с башни видно всё поле, которое вы сегодня прошли.",tgt:"hazm"}
 ];
 
-var RANKS=[[0,"старатель без единого камня"],[1,"первый камень взят"],[3,"глаз пристрелян"],
- [6,"добытчик"],[10,"гранатовый барон"],[20,"легенда Подседиц"]];
+var RANKS=[[0,"старатели без камня"],[1,"первый камень взят"],[3,"глаз пристрелян"],
+ [6,"добытчики"],[10,"гранатовые бароны"],[20,"легенда подседиц"]];
 
-var S=load();
-var pos=null,watchId=null,voice=true,lastSpoke={};
+var BADGES=[
+ {id:"first",t:"первый камень",f:function(){return total()>=1}},
+ {id:"trio", t:"все трое в деле",f:function(){return S.players.every(function(p){return p.c>0})}},
+ {id:"photo",t:"3 фото",f:function(){return S.shots.length>=3}},
+ {id:"ten",  t:"десятка",f:function(){return total()>=10}},
+ {id:"power",t:"три приёма",f:function(){return S.players.every(function(p){return p.at>0})}},
+ {id:"zone", t:"обе красные зоны",f:function(){return S.done.q_zone&&S.done.q_second}},
+ {id:"all",  t:"квест пройден",f:function(){return QUESTS.every(function(q){return S.done[q.id]})}}
+];
 
+/* ---------- страницы интро-комикса ---------- */
+var COMIC=[
+ {k:"страница 1",h:"Под ногами — красные камни",
+  b:"<p>Поле между <b>Подседице</b> и <b>Држемчице</b> — одно из немногих мест на Земле, где чешский пироп лежит прямо в пашне.</p>"+
+    "<p class='fine'>Гранат — красное зерно 2–6 мм. На солнце вспыхивает как стоп-сигнал. Пластик и стекло так не умеют.</p>",
+  bub:["штаб","Задача отряда: пройти 2,7 км по полевой дороге и вынести из поля как можно больше красных камней."]},
+ {k:"страница 2",h:"Отряд из трёх героев",
+  type:"names",
+  b:"<p>Впиши имена — прозвища можно оставить. У каждого своя роль и свой приём.</p>",
+  bub:["пояснение","Жми на имя и печатай. Всё сохраняется в телефоне, даже если связь пропадёт."]},
+ {k:"страница 3",h:"Приёмы героев",
+  b:"<p><b>СКАН</b> — Капи ведёт детектор и задаёт темп: медленно, катушка у земли.</p>"+
+    "<p><b>ЧУЙКА</b> — Тень выдаёт совет поиска: куда смотреть прямо сейчас.</p>"+
+    "<p><b>РАЗЛОМ</b> — Линза включает три минуты, когда каждый камень идёт за два.</p>"+
+    "<p class='fine'>Приём перезаряжается 15 минут. Три приёма за день — значок отряда.</p>",
+  bub:["линза","Разлом лучше включать в пашне, когда камни уже пошли. Не трать в начале."]},
+ {k:"страница 4",h:"Как работает стрелка",
+  b:"<p>Наверху экрана — компас. Он показывает <b>направление и метры</b> до ближайшей цели.</p>"+
+    "<p>Дошли до зоны — задание закрывается само, телефон говорит подсказку вслух.</p>"+
+    "<p class='fine'>Стрелка смотрит по сторонам света, а не по повороту телефона: держи телефон экраном вверх и иди — она сама выровняется.</p>",
+  bub:["пояснение","Нет сети — не беда. Всё работает в самолётном режиме, GPS сети не требует."]},
+ {k:"страница 5",h:"Правила поля",
+  b:"<p>Металлоискателем по частным полям — нельзя. Копать лопатой — нельзя. Собираем <b>с поверхности</b>.</p>"+
+    "<p>В посевы не заходим: ходим по краям, межам и полевым дорогам.</p>"+
+    "<p class='fine'>Газмбурк — памятник археологии: там только смотрим на закат.</p>",
+  bub:["штаб","Мусор за собой, ямки засыпать. Поле должно остаться таким же, как было."]},
+ {k:"страница 6",h:"Поехали",
+  b:"<p>Внизу три кнопки: <b>GPS</b> включает стрелку, <b>голос</b> — подсказки вслух, <b>комикс</b> вернёт эти страницы.</p>"+
+    "<p>Нашёл камень — жми «+1» на своём герое. Ошибся — маленький минус сверху карточки.</p>",
+  bub:["отряд","Три пары глаз, одна дорога, тринадцать заданий. Старт!"]}
+];
+
+/* ---------- состояние ---------- */
+var S=load(), pos=null, watchId=null, voice=true, lastSpoke={}, page=0;
+
+function blank(){
+  return {v:2,players:HEROES.map(function(h){return {n:h.def,c:0,at:0}}),
+          done:{},shots:[],badges:{},x2:0,intro:0};
+}
 function load(){
-  try{var r=JSON.parse(localStorage.getItem("granat")||"null");if(r&&r.players)return r}catch(e){}
-  return {players:[{n:"Игрок 1",c:0},{n:"Игрок 2",c:0},{n:"Игрок 3",c:0}],done:{},shots:[]};
+  var r=null;
+  try{r=JSON.parse(localStorage.getItem("granat")||"null")}catch(e){}
+  if(!r||!r.players)return blank();
+  if(r.v===2)return r;
+  /* миграция со старой версии на три безымянных счётчика */
+  var n=blank();
+  n.done=r.done||{}; n.shots=r.shots||[];
+  (r.players||[]).forEach(function(p,i){
+    if(i>2)return;
+    n.players[i].c=p.c||0;
+    if(p.n&&!/^Игрок/.test(p.n))n.players[i].n=p.n;
+  });
+  n.intro=0;
+  return n;
 }
 function save(){try{localStorage.setItem("granat",JSON.stringify(S))}catch(e){}}
 function total(){return S.players.reduce(function(a,p){return a+p.c},0)}
 
+/* ---------- геометрия ---------- */
 function dist(a,b,c,d){
   var R=6371000,t=Math.PI/180;
   var x=(c-a)*t, y=(d-b)*t*Math.cos((a+c)/2*t);
@@ -165,19 +443,32 @@ function bearing(a,b,c,d){
   return (Math.atan2(y,x)/t+360)%360;
 }
 function word(b){
-  var w=["на север","на северо-восток","на восток","на юго-восток","на юг","на юго-запад","на запад","на северо-запад"];
+  var w=["на север","на северо-восток","на восток","на юго-восток",
+         "на юг","на юго-запад","на запад","на северо-запад"];
   return w[Math.round(b/45)%8];
 }
-function say(key,text){
-  if(!voice||lastSpoke[key])return;
-  lastSpoke[key]=1;
+
+/* ---------- голос и баббл ---------- */
+function speak(text){
+  if(!voice)return;
   try{
     var u=new SpeechSynthesisUtterance(text);
     u.lang="ru-RU";u.rate=.96;
     speechSynthesis.speak(u);
   }catch(e){}
 }
+function showSay(who,text){
+  var w=document.getElementById("sayWho"),t=document.getElementById("sayText");
+  if(w)w.textContent=who; if(t)t.textContent=text;
+}
+function say(key,who,text){
+  if(lastSpoke[key])return;
+  lastSpoke[key]=1;
+  showSay(who,text);
+  speak(text);
+}
 
+/* ---------- прогресс ---------- */
 function nextTarget(){
   for(var i=0;i<QUESTS.length;i++){
     var q=QUESTS[i];
@@ -191,7 +482,6 @@ function currentQuest(){
   for(var i=0;i<QUESTS.length;i++)if(!S.done[QUESTS[i].id])return QUESTS[i];
   return null;
 }
-
 function check(){
   var changed=false;
   QUESTS.forEach(function(q){
@@ -199,23 +489,50 @@ function check(){
     var ok=false;
     if(q.count)ok=total()>=q.count;
     if(q.photo)ok=S.shots.length>=q.photo;
+    if(q.heroCount)ok=S.players[q.heroCount.i].c>=q.heroCount.n;
     if(q.tgt&&pos){
       var t=TARGETS.filter(function(x){return x.id==q.tgt})[0];
       ok=dist(pos.lat,pos.lon,t.lat,t.lon)<=t.r;
     }
-    if(ok){S.done[q.id]=1;changed=true;say("q"+q.id,"Задание выполнено. "+q.txt);}
+    if(ok){S.done[q.id]=1;changed=true;say("q"+q.id,"задание закрыто",q.txt+". "+q.why);}
+  });
+  BADGES.forEach(function(b){
+    if(S.badges[b.id])return;
+    if(b.f()){S.badges[b.id]=1;changed=true;say("b"+b.id,"значок","Отряд получил значок: "+b.t+".");}
   });
   if(pos)TARGETS.forEach(function(t){
-    if(dist(pos.lat,pos.lon,t.lat,t.lon)<=t.r)say("t"+t.id,t.say);
+    if(dist(pos.lat,pos.lon,t.lat,t.lon)<=t.r)say("t"+t.id,"штаб",t.say);
   });
   if(changed)save();
 }
 
+/* ---------- приёмы героев ---------- */
+function usePower(i){
+  var p=S.players[i],h=HEROES[i],left=PW_CD-(Date.now()-(p.at||0));
+  if(p.at&&left>0){
+    showSay(p.n.toLowerCase(),"Приём «"+h.pw+"» перезаряжается ещё "+Math.ceil(left/60000)+" мин.");
+    return;
+  }
+  p.at=Date.now();
+  var text=h.say;
+  if(i===1)text=h.say+" "+TIPS[Math.floor(Math.random()*TIPS.length)];
+  if(i===0){
+    var t=nextTarget();
+    if(t&&pos)text=h.say+" До цели «"+t.name+"» "+dist(pos.lat,pos.lon,t.lat,t.lon)+" метров.";
+  }
+  if(i===2)S.x2=Date.now()+X2_MS;
+  showSay(p.n.toLowerCase(),text);
+  speak(text);
+  save();render();
+}
+function x2on(){return S.x2>Date.now()}
+
+/* ---------- отрисовка ---------- */
 function render(){
   check();
   var t=nextTarget(),q=currentQuest();
   document.getElementById("targetName").textContent=
-    t?("Идём: "+t.name):(q?("Сейчас: "+q.txt):"Всё пройдено. Домой.");
+    t?("цель · "+t.name):(q?("сейчас · "+q.txt):"всё пройдено, домой");
   if(pos&&t){
     var d=dist(pos.lat,pos.lon,t.lat,t.lon),b=bearing(pos.lat,pos.lon,t.lat,t.lon);
     document.getElementById("dist").textContent=d>=1000?(d/1000).toFixed(1):d;
@@ -229,18 +546,19 @@ function render(){
 
   var n=total(),rk=RANKS[0][1];
   RANKS.forEach(function(r){if(n>=r[0])rk=r[1]});
-  document.getElementById("rank").textContent="Подседице — Држемчице · "+rk;
+  var x2l=Math.max(0,S.x2-Date.now());
+  document.getElementById("rank").textContent="отряд · "+rk+" · "+n+" "+
+    plural(n,"камень","камня","камней")+
+    (x2l?" · разлом ×2 ещё "+Math.ceil(x2l/1000)+" с":"");
 
-  var ph=document.getElementById("players");
-  ph.innerHTML="";
-  S.players.forEach(function(p,i){
-    var d=document.createElement("div");d.className="pl";
-    d.innerHTML='<input class="n" value="'+p.n.replace(/"/g,"")+'"><div class="c">'+p.c+'</div><button class="add">+1</button>';
-    d.querySelector(".add").onclick=function(){p.c++;save();render()};
-    d.querySelector(".n").onchange=function(e){p.n=e.target.value;save()};
-    ph.appendChild(d);
-  });
+  /* герои: не пересобираем, пока кто-то печатает имя */
+  var ch=document.getElementById("crew"),ae=document.activeElement;
+  if(!(ae&&ae.classList&&ae.classList.contains("nm")&&ch.contains(ae))){
+    ch.innerHTML="";
+    S.players.forEach(function(p,i){ch.appendChild(heroCard(p,i,false))});
+  }
 
+  /* квесты */
   var qh=document.getElementById("quests");
   qh.innerHTML="";
   var first=true;
@@ -249,18 +567,76 @@ function render(){
     var cls="q"+(S.done[x.id]?" done":"");
     if(!S.done[x.id]&&first){cls+=" now";first=false}
     d.className=cls;
-    d.innerHTML='<div class="mark">'+(S.done[x.id]?"\u2713":"")+'</div><div class="txt">'+
-      x.txt+'<span class="hint">'+x.hint+'</span></div>';
+    var who="";
+    if(x.heroCount){
+      var hi=x.heroCount.i;
+      who='<span class="who" style="background:'+HEROES[hi].color+'">'+esc(S.players[hi].n)+'</span>';
+    }
+    d.innerHTML='<div class="mark">'+(S.done[x.id]?"✓":"")+'</div><div class="txt">'+
+      who+esc(x.txt)+'<span class="hint">'+esc(x.hint)+'</span>'+
+      '<span class="why">'+esc(x.why)+'</span></div>';
     qh.appendChild(d);
   });
 
+  /* значки */
+  var bh=document.getElementById("badges");
+  bh.innerHTML="";
+  BADGES.forEach(function(b){
+    var e=document.createElement("div");
+    e.className="bg"+(S.badges[b.id]?" on":"");
+    e.textContent=(S.badges[b.id]?"★ ":"")+b.t;
+    bh.appendChild(e);
+  });
+
+  /* фото */
   var sh=document.getElementById("shots");
   sh.innerHTML="";
-  S.shots.forEach(function(src){var i=new Image();i.src=src;sh.appendChild(i)});
+  S.shots.forEach(function(src){
+    var w=document.createElement("div");w.className="po";
+    var i=new Image();i.src=src;w.appendChild(i);sh.appendChild(w);
+  });
 
   drawMap();
 }
 
+function plural(n,a,b,c){
+  var m=n%100,k=n%10;
+  if(m>10&&m<20)return c;
+  if(k==1)return a;
+  if(k>1&&k<5)return b;
+  return c;
+}
+function esc(s){return String(s).replace(/[<>&"]/g,function(c){
+  return {"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c]})}
+
+function heroCard(p,i,introMode){
+  var h=HEROES[i],d=document.createElement("div");
+  d.className="hero"+(x2on()&&i===2?" act":"");
+  var left=PW_CD-(Date.now()-(p.at||0)), ready=!p.at||left<=0;
+  d.innerHTML=
+    (introMode?"":'<button class="minus">−</button>')+
+    AVATARS[i]+
+    '<input class="nm" maxlength="9" value="'+esc(p.n)+'">'+
+    '<div class="role">'+esc(h.role)+'</div>'+
+    (introMode?'':'<div class="c">'+p.c+'</div><button class="add">+1</button>'+
+      '<button class="pw'+(ready?'':' off')+'">'+(ready?h.pw:Math.ceil(left/60000)+" мин")+'</button>');
+  d.querySelector(".nm").onchange=function(e){
+    p.n=(e.target.value||h.def).trim()||h.def;save();render();renderIntro();
+  };
+  if(!introMode){
+    d.querySelector(".add").onclick=function(){
+      p.c+=x2on()?2:1;
+      if(x2on())showSay(p.n.toLowerCase(),"Разлом держит: камень засчитан за два.");
+      else showSay(p.n.toLowerCase(),"Камень в кармане. Всего у отряда "+(total())+".");
+      save();render();
+    };
+    d.querySelector(".minus").onclick=function(){if(p.c>0){p.c--;save();render()}};
+    d.querySelector(".pw").onclick=function(){usePower(i)};
+  }
+  return d;
+}
+
+/* ---------- карта поля ---------- */
 function drawMap(){
   var pts=TARGETS.filter(function(t){return t.id!="hazm"});
   var lats=pts.map(function(p){return p.lat}),lons=pts.map(function(p){return p.lon});
@@ -272,36 +648,91 @@ function drawMap(){
   function X(lon){return 12+(lon-lo0)/(lo1-lo0)*316}
   function Y(lat){return 218-(lat-la0)/(la1-la0)*206}
 
-  var s='<rect x="0" y="0" width="340" height="230" rx="10" fill="#241d19"/>';
+  var s='<defs><linearGradient id="mg" x1="0" y1="0" x2="1" y2="1">'+
+        '<stop offset="0" stop-color="#1a1033"/><stop offset="1" stop-color="#2a1550"/></linearGradient></defs>'+
+        '<rect x="0" y="0" width="340" height="230" rx="10" fill="url(%23mg)" stroke="#07040f" stroke-width="3"/>';
+  s=s.replace("url(%23mg)","url(#mg)");
+  for(var gx=20;gx<340;gx+=32)s+='<line x1="'+gx+'" y1="4" x2="'+gx+'" y2="226" stroke="#3a2a63" stroke-width="1" opacity=".5"/>';
+  for(var gy=20;gy<230;gy+=32)s+='<line x1="4" y1="'+gy+'" x2="336" y2="'+gy+'" stroke="#3a2a63" stroke-width="1" opacity=".5"/>';
   var road=pts.map(function(p){return X(p.lon)+","+Y(p.lat)}).join(" ");
-  s+='<polyline points="'+road+'" fill="none" stroke="#4d4038" stroke-width="7" stroke-linejoin="round"/>';
+  s+='<polyline points="'+road+'" fill="none" stroke="#07040f" stroke-width="11" stroke-linejoin="round" stroke-linecap="round"/>';
+  s+='<polyline points="'+road+'" fill="none" stroke="#b6ff3d" stroke-width="5" stroke-linejoin="round" stroke-linecap="round" opacity=".85"/>';
   pts.forEach(function(p){
     var x=X(p.lon),y=Y(p.lat);
-    if(p.kind=="hot")s+='<circle cx="'+x+'" cy="'+y+'" r="21" fill="#c8323f" opacity=".46"/>';
-    if(p.kind=="warm")s+='<circle cx="'+x+'" cy="'+y+'" r="17" fill="#e08a2e" opacity=".34"/>';
-    if(p.kind=="way")s+='<rect x="'+(x-5)+'" y="'+(y-5)+'" width="10" height="10" rx="2" fill="#8d8070"/>';
+    if(p.kind=="hot"){
+      s+='<circle cx="'+x+'" cy="'+y+'" r="23" fill="#ff2e4d" opacity=".34"/>';
+      s+='<circle cx="'+x+'" cy="'+y+'" r="23" fill="none" stroke="#ff2e4d" stroke-width="2"/>';
+    }
+    if(p.kind=="warm"){
+      s+='<circle cx="'+x+'" cy="'+y+'" r="18" fill="#ff9f1c" opacity=".26"/>';
+      s+='<circle cx="'+x+'" cy="'+y+'" r="18" fill="none" stroke="#ff9f1c" stroke-width="2" stroke-dasharray="4 4"/>';
+    }
+    if(p.kind=="way")s+='<rect x="'+(x-6)+'" y="'+(y-6)+'" width="12" height="12" rx="3" fill="#fff3e6" stroke="#07040f" stroke-width="2"/>';
   });
   var t=nextTarget();
-  if(t&&t.id!="hazm")s+='<circle cx="'+X(t.lon)+'" cy="'+Y(t.lat)+'" r="27" fill="none" stroke="#e8e0d0" stroke-width="2"/>';
+  if(t&&t.id!="hazm")s+='<circle cx="'+X(t.lon)+'" cy="'+Y(t.lat)+'" r="29" fill="none" stroke="#3df0ff" stroke-width="3"/>';
   if(pos){
     var x=X(pos.lon),y=Y(pos.lat);
-    s+='<circle cx="'+x+'" cy="'+y+'" r="9" fill="#6f9b3f" opacity=".35"/>';
-    s+='<circle cx="'+x+'" cy="'+y+'" r="5" fill="#9fe15c"/>';
+    s+='<circle cx="'+x+'" cy="'+y+'" r="12" fill="#b6ff3d" opacity=".28"/>';
+    s+='<circle cx="'+x+'" cy="'+y+'" r="6" fill="#b6ff3d" stroke="#07040f" stroke-width="2"/>';
   }
-  s+='<text x="16" y="24" fill="#8d8070" font-size="12" font-family="system-ui">запад — Држемчице</text>';
-  s+='<text x="324" y="215" fill="#8d8070" font-size="12" font-family="system-ui" text-anchor="end">восток — Подседице</text>';
+  s+='<text x="16" y="24" fill="#a494c9" font-size="11" font-weight="700" font-family="system-ui">ЗАПАД · ДРЖЕМЧИЦЕ</text>';
+  s+='<text x="324" y="216" fill="#a494c9" font-size="11" font-weight="700" font-family="system-ui" text-anchor="end">ПОДСЕДИЦЕ · ВОСТОК</text>';
   document.getElementById("map").innerHTML=s;
 }
 
+/* ---------- интро-комикс ---------- */
+function renderIntro(){
+  var box=document.getElementById("intro");
+  if(box.hidden)return;
+  var c=COMIC[page];
+  var st=document.getElementById("strip");
+  st.innerHTML='<div class="strip"><div class="kicker">'+c.k+'</div><h2>'+c.h+'</h2>'+c.b+
+    (c.bub?'<div class="bubble" style="margin-bottom:0"><span class="who">'+esc(c.bub[0])+'</span>'+esc(c.bub[1])+'</div>':'')+
+    '</div>';
+  if(c.type=="names"){
+    var pick=document.createElement("div");pick.className="pick";
+    S.players.forEach(function(p,i){pick.appendChild(heroCard(p,i,true))});
+    st.querySelector(".strip").insertBefore(pick,st.querySelector(".bubble"));
+  }
+  var pg=document.getElementById("pager");
+  pg.innerHTML="";
+  COMIC.forEach(function(_,i){
+    var d=document.createElement("i");if(i==page)d.className="on";pg.appendChild(d);
+  });
+  document.getElementById("introBack").style.visibility=page?"visible":"hidden";
+  document.getElementById("introNext").textContent=page==COMIC.length-1?"в поле!":"дальше";
+  box.scrollTop=0;
+}
+function openIntro(p){
+  page=p||0;
+  document.getElementById("intro").hidden=false;
+  document.body.style.overflow="hidden";
+  renderIntro();
+}
+function closeIntro(){
+  document.getElementById("intro").hidden=true;
+  document.body.style.overflow="";
+  S.intro=1;save();render();
+}
+document.getElementById("introNext").onclick=function(){
+  if(page==COMIC.length-1){closeIntro();say("go","отряд","Старт. Отряд вышел на охоту.");return}
+  page++;renderIntro();
+};
+document.getElementById("introBack").onclick=function(){if(page){page--;renderIntro()}};
+
+/* ---------- нижняя панель ---------- */
 document.getElementById("gpsBtn").onclick=function(){
-  if(watchId!==null){navigator.geolocation.clearWatch(watchId);watchId=null;
-    this.textContent="Включить GPS";this.classList.remove("on");return}
+  if(watchId!==null){
+    navigator.geolocation.clearWatch(watchId);watchId=null;
+    this.textContent="GPS";this.classList.remove("on");return;
+  }
   if(!navigator.geolocation){document.getElementById("geowarn").textContent="Браузер не отдаёт геолокацию.";return}
   var b=this;
   watchId=navigator.geolocation.watchPosition(function(p){
     pos={lat:p.coords.latitude,lon:p.coords.longitude};
     document.getElementById("geowarn").style.display="none";
-    b.textContent="GPS ведёт";b.classList.add("on");
+    b.textContent="ведёт";b.classList.add("on");
     render();
   },function(){
     document.getElementById("geowarn").textContent="Доступ к геолокации закрыт. Разреши его для этой страницы в настройках браузера.";
@@ -309,17 +740,23 @@ document.getElementById("gpsBtn").onclick=function(){
 };
 
 document.getElementById("voiceBtn").onclick=function(){
-  voice=!voice;this.textContent=voice?"Голос вкл":"Голос выкл";
+  voice=!voice;
   this.classList.toggle("on",voice);
-  if(voice)say("hello","Голосовые подсказки включены. Идём за гранатами.");
+  if(voice){showSay("штаб","Голос включён. Идём за гранатами.");speak("Голос включён. Идём за гранатами.")}
+  else{try{speechSynthesis.cancel()}catch(e){} showSay("штаб","Голос выключен, подсказки остаются на экране.")}
 };
+
+document.getElementById("comicBtn").onclick=function(){openIntro(0)};
 
 document.getElementById("resetBtn").onclick=function(){
-  if(!confirm("Стереть находки, фото и прогресс?"))return;
-  S={players:[{n:"Игрок 1",c:0},{n:"Игрок 2",c:0},{n:"Игрок 3",c:0}],done:{},shots:[]};
-  lastSpoke={};save();render();
+  if(!confirm("Стереть находки, фото, значки и прогресс? Имена героев останутся."))return;
+  var names=S.players.map(function(p){return p.n});
+  S=blank();
+  S.players.forEach(function(p,i){p.n=names[i]});
+  S.intro=1;lastSpoke={};save();render();
 };
 
+/* ---------- камера ---------- */
 document.getElementById("cam").onchange=function(e){
   var f=e.target.files[0];if(!f)return;
   var img=new Image(),fr=new FileReader();
@@ -335,7 +772,9 @@ document.getElementById("cam").onchange=function(e){
   e.target.value="";
 };
 
+/* ---------- старт ---------- */
 render();
+if(!S.intro)openIntro(0);
 setInterval(render,5000);
 </script>
 </body>
