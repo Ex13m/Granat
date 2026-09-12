@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Гранатовая охота</title>
+<meta name="theme-color" content="#1a1512">
+<style>
+:root{
+  --stone:#2b2420; --stone-2:#3a302a; --sand:#e8e0d0; --sand-dim:#b5a992;
+  --garnet:#c8323f; --garnet-deep:#7d1a23; --ember:#e08a2e; --moss:#6f9b3f;
+  --r:14px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:#1a1512;color:var(--sand);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  font-size:17px;line-height:1.5;overscroll-behavior:none}
+body{padding:14px 14px 90px;max-width:560px;margin:0 auto}
+h1{font-size:25px;font-weight:600;letter-spacing:-.4px;margin:2px 0 2px}
+.sub{color:var(--sand-dim);font-size:14px;margin-bottom:14px}
+.card{background:var(--stone);border-radius:var(--r);padding:14px;margin-bottom:12px}
+button{font:inherit;color:inherit;border:none;background:none;cursor:pointer}
+.btn{display:block;width:100%;padding:15px;border-radius:var(--r);
+  background:var(--garnet);color:#fff;font-weight:600;font-size:17px;text-align:center}
+.btn:active{background:var(--garnet-deep)}
+.btn.ghost{background:var(--stone-2);color:var(--sand)}
+.row{display:flex;gap:10px}
+.row>*{flex:1}
+.lab{font-size:13px;color:var(--sand-dim);margin-bottom:6px}
+.big{font-size:40px;font-weight:600;letter-spacing:-1.5px;line-height:1}
+.unit{font-size:16px;color:var(--sand-dim);font-weight:400}
+svg{display:block;width:100%}
+.dir{display:flex;align-items:center;gap:14px}
+.needle{width:86px;height:86px;flex:0 0 86px;background:var(--stone-2);border-radius:50%}
+.q{display:flex;gap:11px;padding:11px 0;border-top:1px solid #40352e}
+.q:first-of-type{border-top:none}
+.q .mark{flex:0 0 24px;height:24px;border-radius:50%;background:var(--stone-2);
+  display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--sand-dim);margin-top:2px}
+.q.done .mark{background:var(--moss);color:#14200a}
+.q.now .mark{background:var(--ember);color:#2b1a02}
+.q .txt{font-size:15px}
+.q.done .txt{color:var(--sand-dim);text-decoration:line-through}
+.q .hint{font-size:13px;color:var(--sand-dim);margin-top:2px;text-decoration:none;display:block}
+.players{display:flex;gap:8px}
+.pl{flex:1;background:var(--stone-2);border-radius:12px;padding:10px 8px;text-align:center}
+.pl .n{font-size:13px;color:var(--sand-dim);width:100%;background:none;border:none;
+  text-align:center;font-family:inherit;padding:0}
+.pl .c{font-size:27px;font-weight:600;margin:3px 0 6px}
+.pl .add{background:var(--garnet-deep);border-radius:9px;padding:9px 0;font-size:15px;width:100%;color:#fff}
+.shots{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.shots img{width:66px;height:66px;object-fit:cover;border-radius:10px}
+.bar{position:fixed;left:0;right:0;bottom:0;background:#120e0c;
+  padding:10px 14px calc(10px + env(safe-area-inset-bottom));display:flex;gap:10px;
+  max-width:560px;margin:0 auto}
+.bar button{flex:1;background:var(--stone);border-radius:12px;padding:12px 6px;font-size:13px;text-align:center}
+.bar button.on{background:var(--garnet)}
+.rank{font-size:14px;color:var(--ember)}
+.warn{background:#3a1a1a;color:#f0b8b8;font-size:14px;border-radius:12px;padding:11px 13px;margin-bottom:12px}
+label.file{display:block;width:100%;padding:13px;border-radius:var(--r);background:var(--stone-2);
+  text-align:center;font-size:15px;margin-top:10px}
+input[type=file]{display:none}
+</style>
+</head>
+<body>
+
+<h1>Гранатовая охота</h1>
+<div class="sub" id="rank">Подседице — Држемчице · старатель без единого камня</div>
+
+<div class="warn" id="geowarn">Нажми «Включить GPS» внизу — без него стрелка и зоны не работают.</div>
+
+<div class="card">
+  <div class="lab" id="targetName">Цель не выбрана</div>
+  <div class="dir">
+    <svg class="needle" viewBox="0 0 100 100" id="needle">
+      <circle cx="50" cy="50" r="48" fill="#3a302a"/>
+      <g id="needleRot">
+        <path d="M50 14 L64 62 L50 54 L36 62 Z" fill="#c8323f"/>
+      </g>
+      <circle cx="50" cy="50" r="4" fill="#e8e0d0"/>
+    </svg>
+    <div>
+      <div class="big"><span id="dist">—</span> <span class="unit" id="distUnit">м</span></div>
+      <div class="lab" id="dirWord" style="margin:6px 0 0">ждём спутники</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="lab">Карта поля — красные пятна самые богатые</div>
+  <svg viewBox="0 0 340 230" id="map" role="img" aria-label="Схема поля с зонами поиска"></svg>
+</div>
+
+<div class="card">
+  <div class="lab">Кто сколько нашёл</div>
+  <div class="players" id="players"></div>
+  <label class="file">Снять находку
+    <input type="file" accept="image/*" capture="environment" id="cam">
+  </label>
+  <div class="shots" id="shots"></div>
+</div>
+
+<div class="card" id="quests"></div>
+
+<div class="bar">
+  <button id="gpsBtn">Включить GPS</button>
+  <button id="voiceBtn" class="on">Голос вкл</button>
+  <button id="resetBtn">Сброс</button>
+</div>
+
+<script>
+var TARGETS=[
+ {id:"park",name:"Парковка в Подседице",lat:50.47199,lon:13.94830,r:130,kind:"way",
+  say:"Приехали. Ставь машину у площади, дальше пешком на запад."},
+ {id:"road",name:"Начало полевой дороги",lat:50.47350,lon:13.94300,r:90,kind:"way",
+  say:"Вот грунтовка. Идём по ней на запад, поля по обе стороны."},
+ {id:"z1",name:"Зона: ручей",lat:50.47330,lon:13.93850,r:95,kind:"hot",
+  say:"Горячая зона. Ищи в гравии у воды, гранат тяжёлый и лежит в ямках за камнями."},
+ {id:"z2",name:"Зона: пашня",lat:50.47370,lon:13.93250,r:115,kind:"hot",
+  say:"Главное поле. Встаньте шеренгой спиной к солнцу и идите вдоль борозды. Камни вспыхивают красным."},
+ {id:"z3",name:"Зона: межа",lat:50.47410,lon:13.92650,r:95,kind:"warm",
+  say:"Идём по краю поля, в посевы не заходим. Смотри выброшенную землю."},
+ {id:"z4",name:"Зона: отвал",lat:50.47450,lon:13.91900,r:100,kind:"warm",
+  say:"Кучи грунта у дороги. Молоток по плотным комкам, по обычной земле не бей."},
+ {id:"drem",name:"Држемчице — поворот назад",lat:50.47429,lon:13.91260,r:110,kind:"way",
+  say:"Дошли до Држемчице. Назад идём по другой стороне дороги, это второй заход."},
+ {id:"hazm",name:"Газмбурк — парковка",lat:50.43063,lon:14.01073,r:150,kind:"way",
+  say:"Парковка под Газмбурком. Сорок крон монетами. Наверх полчаса, успеваем на закат."}
+];
+
+var QUESTS=[
+ {id:"q_park",txt:"Доехать до Подседице и встать у площади",hint:"50.47199, 13.94830",tgt:"park"},
+ {id:"q_road",txt:"Найти грунтовку и уйти с асфальта",hint:"метров 500 на запад от края деревни",tgt:"road"},
+ {id:"q_zone",txt:"Войти в первую красную зону",hint:"стрелка наверху доведёт",tgt:"z1"},
+ {id:"q_first",txt:"Найти первый гранат",hint:"красное зерно 2–6 мм, блестит против света",count:1},
+ {id:"q_photo",txt:"Снять находку на камеру",hint:"кнопка «снять находку»",photo:1},
+ {id:"q_five",txt:"Набрать пять камней на всех",hint:"проверяем дома в воде",count:5},
+ {id:"q_second",txt:"Дойти до пашни — главной зоны",hint:"ещё 500 метров по дороге",tgt:"z2"},
+ {id:"q_ten",txt:"Набрать десять камней",hint:"это уже полноценный улов",count:10},
+ {id:"q_back",txt:"Дойти до Држемчице и развернуться",hint:"обратно по другой стороне",tgt:"drem"},
+ {id:"q_hazm",txt:"Доехать до Газмбурка на закат",hint:"подъём 25–30 минут",tgt:"hazm"}
+];
+
+var RANKS=[[0,"старатель без единого камня"],[1,"первый камень взят"],[3,"глаз пристрелян"],
+ [6,"добытчик"],[10,"гранатовый барон"],[20,"легенда Подседиц"]];
+
+var S=load();
+var pos=null,watchId=null,voice=true,lastSpoke={};
+
+function load(){
+  try{var r=JSON.parse(localStorage.getItem("granat")||"null");if(r&&r.players)return r}catch(e){}
+  return {players:[{n:"Игрок 1",c:0},{n:"Игрок 2",c:0},{n:"Игрок 3",c:0}],done:{},shots:[]};
+}
+function save(){try{localStorage.setItem("granat",JSON.stringify(S))}catch(e){}}
+function total(){return S.players.reduce(function(a,p){return a+p.c},0)}
+
+function dist(a,b,c,d){
+  var R=6371000,t=Math.PI/180;
+  var x=(c-a)*t, y=(d-b)*t*Math.cos((a+c)/2*t);
+  return Math.round(Math.sqrt(x*x+y*y)*R);
+}
+function bearing(a,b,c,d){
+  var t=Math.PI/180;
+  var y=Math.sin((d-b)*t)*Math.cos(c*t);
+  var x=Math.cos(a*t)*Math.sin(c*t)-Math.sin(a*t)*Math.cos(c*t)*Math.cos((d-b)*t);
+  return (Math.atan2(y,x)/t+360)%360;
+}
+function word(b){
+  var w=["на север","на северо-восток","на восток","на юго-восток","на юг","на юго-запад","на запад","на северо-запад"];
+  return w[Math.round(b/45)%8];
+}
+function say(key,text){
+  if(!voice||lastSpoke[key])return;
+  lastSpoke[key]=1;
+  try{
+    var u=new SpeechSynthesisUtterance(text);
+    u.lang="ru-RU";u.rate=.96;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+function nextTarget(){
+  for(var i=0;i<QUESTS.length;i++){
+    var q=QUESTS[i];
+    if(S.done[q.id])continue;
+    if(q.tgt)return TARGETS.filter(function(t){return t.id==q.tgt})[0];
+    return null;
+  }
+  return null;
+}
+function currentQuest(){
+  for(var i=0;i<QUESTS.length;i++)if(!S.done[QUESTS[i].id])return QUESTS[i];
+  return null;
+}
+
+function check(){
+  var changed=false;
+  QUESTS.forEach(function(q){
+    if(S.done[q.id])return;
+    var ok=false;
+    if(q.count)ok=total()>=q.count;
+    if(q.photo)ok=S.shots.length>=q.photo;
+    if(q.tgt&&pos){
+      var t=TARGETS.filter(function(x){return x.id==q.tgt})[0];
+      ok=dist(pos.lat,pos.lon,t.lat,t.lon)<=t.r;
+    }
+    if(ok){S.done[q.id]=1;changed=true;say("q"+q.id,"Задание выполнено. "+q.txt);}
+  });
+  if(pos)TARGETS.forEach(function(t){
+    if(dist(pos.lat,pos.lon,t.lat,t.lon)<=t.r)say("t"+t.id,t.say);
+  });
+  if(changed)save();
+}
+
+function render(){
+  check();
+  var t=nextTarget(),q=currentQuest();
+  document.getElementById("targetName").textContent=
+    t?("Идём: "+t.name):(q?("Сейчас: "+q.txt):"Всё пройдено. Домой.");
+  if(pos&&t){
+    var d=dist(pos.lat,pos.lon,t.lat,t.lon),b=bearing(pos.lat,pos.lon,t.lat,t.lon);
+    document.getElementById("dist").textContent=d>=1000?(d/1000).toFixed(1):d;
+    document.getElementById("distUnit").textContent=d>=1000?"км":"м";
+    document.getElementById("dirWord").textContent=d<=t.r?"на месте":word(b);
+    document.getElementById("needleRot").setAttribute("transform","rotate("+b+" 50 50)");
+  }else if(!t){
+    document.getElementById("dist").textContent="—";
+    document.getElementById("dirWord").textContent=q?"ищем на месте":"готово";
+  }
+
+  var n=total(),rk=RANKS[0][1];
+  RANKS.forEach(function(r){if(n>=r[0])rk=r[1]});
+  document.getElementById("rank").textContent="Подседице — Држемчице · "+rk;
+
+  var ph=document.getElementById("players");
+  ph.innerHTML="";
+  S.players.forEach(function(p,i){
+    var d=document.createElement("div");d.className="pl";
+    d.innerHTML='<input class="n" value="'+p.n.replace(/"/g,"")+'"><div class="c">'+p.c+'</div><button class="add">+1</button>';
+    d.querySelector(".add").onclick=function(){p.c++;save();render()};
+    d.querySelector(".n").onchange=function(e){p.n=e.target.value;save()};
+    ph.appendChild(d);
+  });
+
+  var qh=document.getElementById("quests");
+  qh.innerHTML="";
+  var first=true;
+  QUESTS.forEach(function(x){
+    var d=document.createElement("div");
+    var cls="q"+(S.done[x.id]?" done":"");
+    if(!S.done[x.id]&&first){cls+=" now";first=false}
+    d.className=cls;
+    d.innerHTML='<div class="mark">'+(S.done[x.id]?"\u2713":"")+'</div><div class="txt">'+
+      x.txt+'<span class="hint">'+x.hint+'</span></div>';
+    qh.appendChild(d);
+  });
+
+  var sh=document.getElementById("shots");
+  sh.innerHTML="";
+  S.shots.forEach(function(src){var i=new Image();i.src=src;sh.appendChild(i)});
+
+  drawMap();
+}
+
+function drawMap(){
+  var pts=TARGETS.filter(function(t){return t.id!="hazm"});
+  var lats=pts.map(function(p){return p.lat}),lons=pts.map(function(p){return p.lon});
+  if(pos){lats.push(pos.lat);lons.push(pos.lon)}
+  var la0=Math.min.apply(null,lats),la1=Math.max.apply(null,lats);
+  var lo0=Math.min.apply(null,lons),lo1=Math.max.apply(null,lons);
+  var padLa=(la1-la0)*.25+.0006,padLo=(lo1-lo0)*.12+.0012;
+  la0-=padLa;la1+=padLa;lo0-=padLo;lo1+=padLo;
+  function X(lon){return 12+(lon-lo0)/(lo1-lo0)*316}
+  function Y(lat){return 218-(lat-la0)/(la1-la0)*206}
+
+  var s='<rect x="0" y="0" width="340" height="230" rx="10" fill="#241d19"/>';
+  var road=pts.map(function(p){return X(p.lon)+","+Y(p.lat)}).join(" ");
+  s+='<polyline points="'+road+'" fill="none" stroke="#4d4038" stroke-width="7" stroke-linejoin="round"/>';
+  pts.forEach(function(p){
+    var x=X(p.lon),y=Y(p.lat);
+    if(p.kind=="hot")s+='<circle cx="'+x+'" cy="'+y+'" r="21" fill="#c8323f" opacity=".46"/>';
+    if(p.kind=="warm")s+='<circle cx="'+x+'" cy="'+y+'" r="17" fill="#e08a2e" opacity=".34"/>';
+    if(p.kind=="way")s+='<rect x="'+(x-5)+'" y="'+(y-5)+'" width="10" height="10" rx="2" fill="#8d8070"/>';
+  });
+  var t=nextTarget();
+  if(t&&t.id!="hazm")s+='<circle cx="'+X(t.lon)+'" cy="'+Y(t.lat)+'" r="27" fill="none" stroke="#e8e0d0" stroke-width="2"/>';
+  if(pos){
+    var x=X(pos.lon),y=Y(pos.lat);
+    s+='<circle cx="'+x+'" cy="'+y+'" r="9" fill="#6f9b3f" opacity=".35"/>';
+    s+='<circle cx="'+x+'" cy="'+y+'" r="5" fill="#9fe15c"/>';
+  }
+  s+='<text x="16" y="24" fill="#8d8070" font-size="12" font-family="system-ui">запад — Држемчице</text>';
+  s+='<text x="324" y="215" fill="#8d8070" font-size="12" font-family="system-ui" text-anchor="end">восток — Подседице</text>';
+  document.getElementById("map").innerHTML=s;
+}
+
+document.getElementById("gpsBtn").onclick=function(){
+  if(watchId!==null){navigator.geolocation.clearWatch(watchId);watchId=null;
+    this.textContent="Включить GPS";this.classList.remove("on");return}
+  if(!navigator.geolocation){document.getElementById("geowarn").textContent="Браузер не отдаёт геолокацию.";return}
+  var b=this;
+  watchId=navigator.geolocation.watchPosition(function(p){
+    pos={lat:p.coords.latitude,lon:p.coords.longitude};
+    document.getElementById("geowarn").style.display="none";
+    b.textContent="GPS ведёт";b.classList.add("on");
+    render();
+  },function(){
+    document.getElementById("geowarn").textContent="Доступ к геолокации закрыт. Разреши его для этой страницы в настройках браузера.";
+  },{enableHighAccuracy:true,maximumAge:4000,timeout:20000});
+};
+
+document.getElementById("voiceBtn").onclick=function(){
+  voice=!voice;this.textContent=voice?"Голос вкл":"Голос выкл";
+  this.classList.toggle("on",voice);
+  if(voice)say("hello","Голосовые подсказки включены. Идём за гранатами.");
+};
+
+document.getElementById("resetBtn").onclick=function(){
+  if(!confirm("Стереть находки, фото и прогресс?"))return;
+  S={players:[{n:"Игрок 1",c:0},{n:"Игрок 2",c:0},{n:"Игрок 3",c:0}],done:{},shots:[]};
+  lastSpoke={};save();render();
+};
+
+document.getElementById("cam").onchange=function(e){
+  var f=e.target.files[0];if(!f)return;
+  var img=new Image(),fr=new FileReader();
+  fr.onload=function(){img.onload=function(){
+    var k=420/Math.max(img.width,img.height),c=document.createElement("canvas");
+    c.width=img.width*k;c.height=img.height*k;
+    c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+    S.shots.unshift(c.toDataURL("image/jpeg",.6));
+    if(S.shots.length>12)S.shots.pop();
+    save();render();
+  };img.src=fr.result};
+  fr.readAsDataURL(f);
+  e.target.value="";
+};
+
+render();
+setInterval(render,5000);
+</script>
+</body>
+</html>
