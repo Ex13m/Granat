@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>ГРАНАТ · охота отряда</title>
+<title>ПИРОП РАШ · гранатовая охота</title>
 <meta name="theme-color" content="#0b0716">
 <style>
 :root{
@@ -87,7 +87,8 @@ svg{display:block;width:100%}
 .hero{flex:1;background:#120c24;border:3px solid var(--ink);border-radius:14px;padding:8px 6px 9px;
   text-align:center;position:relative;box-shadow:3px 3px 0 var(--ink)}
 .hero.act{outline:3px solid var(--lime);outline-offset:2px}
-.hero .av{width:100%;height:auto;margin-bottom:2px}
+.hero .av{width:100%;height:auto;margin-bottom:2px;border:2px solid var(--ink);border-radius:10px;
+  aspect-ratio:1/1;object-fit:cover;display:block}
 .hero .nm{font-size:11px;letter-spacing:.6px;text-transform:uppercase;font-weight:900;
   width:100%;background:none;border:none;text-align:center;font-family:inherit;padding:2px 0;color:var(--cream)}
 .hero .role{font-size:10px;color:var(--dim);letter-spacing:.4px;min-height:24px}
@@ -110,6 +111,7 @@ svg{display:block;width:100%}
 @keyframes pulse{50%{box-shadow:0 0 0 7px rgba(255,45,149,.18)}}
 .q .txt{font-size:15px;font-weight:700}
 .q.done .txt{color:var(--dim);text-decoration:line-through}
+.q.done .hint,.q.done .why{text-decoration:none;opacity:.55}
 .q .hint{display:block;font-size:13px;font-weight:500;color:var(--dim);margin-top:3px;text-decoration:none}
 .q .why{display:block;font-size:13px;font-weight:600;color:var(--cyan);margin-top:4px;text-decoration:none}
 .q .who{display:inline-block;font-size:10px;font-weight:900;letter-spacing:.8px;text-transform:uppercase;
@@ -143,12 +145,36 @@ input[type=file]{display:none}
 .warn{background:#3d0a1c;border:3px solid var(--garnet);color:#ffc9d5;font-size:14px;font-weight:600;
   border-radius:14px;padding:11px 13px;margin-bottom:14px}
 
+/* ---------- живая сцена-шапка ---------- */
+.stage{position:relative;border:3px solid var(--ink);border-radius:var(--r);overflow:hidden;
+  margin-bottom:14px;box-shadow:6px 6px 0 var(--ink);background:#0d0820}
+.stage .frame{position:absolute;inset:0;overflow:hidden}
+.stage img.scene{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  opacity:0;transition:opacity .9s ease;transform-origin:52% 45%;
+  animation:ken 16s ease-in-out infinite alternate}
+.stage img.scene.on{opacity:1}
+.stage .veil{position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(11,7,22,.22) 0%,rgba(11,7,22,.55) 52%,rgba(11,7,22,.94) 100%)}
+.stage .grain{position:absolute;inset:0;opacity:.30;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(0deg,rgba(0,0,0,.28) 0 1px,transparent 1px 3px)}
+.stage .inner{position:relative;padding:92px 14px 14px}
+.stage h1{margin:0}
+.stage .sub{margin:4px 0 0}
+@keyframes ken{from{transform:scale(1) translate3d(0,0,0)}to{transform:scale(1.13) translate3d(-1.5%,-2%,0)}}
+.glitch{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:0;
+  background:linear-gradient(90deg,rgba(255,45,149,.55),transparent 30%,rgba(61,240,255,.55))}
+.glitch.go{animation:glitch .5s steps(3)}
+@keyframes glitch{0%{opacity:.8;transform:translateX(-6px)}50%{opacity:.5;transform:translateX(5px)}100%{opacity:0}}
+
 /* ---------- интро-комикс ---------- */
 #intro{position:fixed;inset:0;z-index:20;background:var(--void);overflow-y:auto;
   padding:16px 14px calc(96px + env(safe-area-inset-bottom))}
 #intro .inner{max-width:600px;margin:0 auto}
 .strip{border:3px solid var(--ink);border-radius:var(--r);box-shadow:6px 6px 0 var(--ink);
   background:linear-gradient(150deg,#1d1338,#2b1a52);padding:16px;margin-bottom:14px;position:relative}
+.strip img.art{width:100%;border:3px solid var(--ink);border-radius:12px;margin:0 0 12px;display:block;
+  max-height:230px;object-fit:cover;object-position:center 42%}
 .strip .kicker{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--lime);font-weight:900}
 .strip h2{font-size:23px;margin:6px 0 8px;font-weight:900;font-style:italic;letter-spacing:-.6px;
   text-shadow:2px 2px 0 var(--ink)}
@@ -169,7 +195,7 @@ input[type=file]{display:none}
 
 <!-- ================= ИНТРО-КОМИКС ================= -->
 <div id="intro" hidden><div class="inner">
-  <h1 class="tag">Гранатовая<br>охота</h1>
+  <h1 class="tag">Пироп<br>раш</h1>
   <div class="sub">комикс-квест · 3 героя · поле у подседице</div>
 
   <div class="pager" id="pager"></div>
@@ -182,8 +208,17 @@ input[type=file]{display:none}
 </div></div>
 
 <!-- ================= ИГРА ================= -->
-<h1 class="tag">Гранатовая охота</h1>
-<div class="sub" id="rank">отряд · старатели без камня</div>
+<div class="stage">
+  <div class="frame">
+    <img class="scene" id="sc0" alt="">
+    <img class="scene" id="sc1" alt="">
+    <div class="veil"></div><div class="grain"></div><div class="glitch" id="glitch"></div>
+  </div>
+  <div class="inner">
+    <h1 class="tag">Пироп<br>раш</h1>
+    <div class="sub" id="rank">отряд · старатели без камня</div>
+  </div>
+</div>
 
 <div class="warn" id="geowarn">Жми «GPS» внизу — без него стрелка и зоны спят.</div>
 
@@ -257,35 +292,11 @@ input[type=file]{display:none}
    один файл, ноль зависимостей, ноль сети
    ========================================================= */
 
-/* ---------- герои: рисованные аватары по фото отряда ---------- */
-function AV(o){
-  return '<svg class="av" viewBox="0 0 100 118">'+
-  '<rect x="2" y="2" width="96" height="114" rx="12" fill="'+o.bg+'" stroke="#07040f" stroke-width="4"/>'+
-  '<circle cx="50" cy="96" r="34" fill="'+o.body+'" stroke="#07040f" stroke-width="3"/>'+
-  (o.jacket?'<path d="M16 118 L16 92 Q50 74 84 92 L84 118 Z" fill="'+o.jacket+'" stroke="#07040f" stroke-width="3"/>'+
-            '<path d="M50 78 L38 118 L62 118 Z" fill="'+o.body+'" stroke="#07040f" stroke-width="2"/>':'')+
-  '<ellipse cx="50" cy="52" rx="26" ry="28" fill="#ffd9be" stroke="#07040f" stroke-width="3"/>'+
-  '<path d="M24 40 Q50 24 76 40 L76 46 Q50 34 24 46 Z" fill="'+o.hair+'" stroke="#07040f" stroke-width="3"/>'+
-  '<path d="M22 40 Q50 14 78 40 L78 44 Q50 30 22 44 Z" fill="'+o.cap+'" stroke="#07040f" stroke-width="3"/>'+
-  '<path d="M22 42 Q46 46 '+(o.peak=='l'?'6':'92')+' 50 Q46 56 22 50 Z" fill="'+o.cap+'" stroke="#07040f" stroke-width="3"/>'+
-  '<circle cx="50" cy="30" r="4" fill="'+o.logo+'" stroke="#07040f" stroke-width="2"/>'+
-  (o.glass?'<g stroke="#07040f" stroke-width="3" fill="rgba(61,240,255,.30)">'+
-     '<rect x="27" y="50" width="19" height="15" rx="5"/><rect x="54" y="50" width="19" height="15" rx="5"/>'+
-     '<path d="M46 56 h8"/></g>':'')+
-  '<circle cx="39" cy="57" r="'+(o.glass?2.6:4)+'" fill="#07040f"/>'+
-  '<circle cx="63" cy="57" r="'+(o.glass?2.6:4)+'" fill="#07040f"/>'+
-  '<circle cx="40.5" cy="55.5" r="1.3" fill="#fff"/><circle cx="64.5" cy="55.5" r="1.3" fill="#fff"/>'+
-  '<path d="M42 70 Q50 76 58 70" stroke="#07040f" stroke-width="3" fill="none" stroke-linecap="round"/>'+
-  (o.tool||'')+
-  '</svg>';
-}
-var AVATARS=[
-  AV({bg:"#2a1b52",body:"#5b6b7d",jacket:"#2f6fd0",hair:"#6b4426",cap:"#e6dcc3",logo:"#ff9f1c",peak:"l"}),
-  AV({bg:"#1b2a52",body:"#14121c",jacket:"",hair:"#c9a86b",cap:"#14121c",logo:"#3df0ff",peak:"r"}),
-  AV({bg:"#20304a",body:"#f2f2f2",jacket:"#9aa3ad",hair:"#3a2a1c",cap:"#6d7a4a",logo:"#b6ff3d",peak:"r",glass:1,
-      tool:'<path d="M84 30 L96 66" stroke="#07040f" stroke-width="6" stroke-linecap="round"/>'+
-           '<path d="M80 22 l10 -4 4 12 -10 4 z" fill="#cfd6dd" stroke="#07040f" stroke-width="3"/>'})
-];
+/* ---------- герои: арт-аватары отряда (лежат в репозитории, сеть не нужна) ---------- */
+var AVATARS=["img/a1.webp","img/a2.webp","img/a3.webp"];
+
+/* ---------- кадры маршрута ---------- */
+var SCENES={road:"img/b4.webp",find:"img/b5.webp",hunt:"img/b6.webp",castle:"img/b7.webp"};
 
 var HEROES=[
   {def:"КАПИ", role:"сканер · ведёт детектор",
@@ -374,7 +385,7 @@ var BADGES=[
 
 /* ---------- страницы интро-комикса ---------- */
 var COMIC=[
- {k:"страница 1",h:"Под ногами — красные камни",
+ {k:"страница 1",h:"Под ногами — красные камни",art:"img/b5.webp",
   b:"<p>Поле между <b>Подседице</b> и <b>Држемчице</b> — одно из немногих мест на Земле, где чешский пироп лежит прямо в пашне.</p>"+
     "<p class='fine'>Гранат — красное зерно 2–6 мм. На солнце вспыхивает как стоп-сигнал. Пластик и стекло так не умеют.</p>",
   bub:["штаб","Задача отряда: пройти 2,7 км по полевой дороге и вынести из поля как можно больше красных камней."]},
@@ -382,18 +393,18 @@ var COMIC=[
   type:"names",
   b:"<p>Впиши имена — прозвища можно оставить. У каждого своя роль и свой приём.</p>",
   bub:["пояснение","Жми на имя и печатай. Всё сохраняется в телефоне, даже если связь пропадёт."]},
- {k:"страница 3",h:"Приёмы героев",
+ {k:"страница 3",h:"Приёмы героев",art:"img/b6.webp",
   b:"<p><b>СКАН</b> — Капи ведёт детектор и задаёт темп: медленно, катушка у земли.</p>"+
     "<p><b>ЧУЙКА</b> — Тень выдаёт совет поиска: куда смотреть прямо сейчас.</p>"+
     "<p><b>РАЗЛОМ</b> — Линза включает три минуты, когда каждый камень идёт за два.</p>"+
     "<p class='fine'>Приём перезаряжается 15 минут. Три приёма за день — значок отряда.</p>",
   bub:["линза","Разлом лучше включать в пашне, когда камни уже пошли. Не трать в начале."]},
- {k:"страница 4",h:"Как работает стрелка",
+ {k:"страница 4",h:"Как работает стрелка",art:"img/b4.webp",
   b:"<p>Наверху экрана — компас. Он показывает <b>направление и метры</b> до ближайшей цели.</p>"+
     "<p>Дошли до зоны — задание закрывается само, телефон говорит подсказку вслух.</p>"+
     "<p class='fine'>Стрелка смотрит по сторонам света, а не по повороту телефона: держи телефон экраном вверх и иди — она сама выровняется.</p>",
   bub:["пояснение","Нет сети — не беда. Всё работает в самолётном режиме, GPS сети не требует."]},
- {k:"страница 5",h:"Правила поля",
+ {k:"страница 5",h:"Правила поля",art:"img/b7.webp",
   b:"<p>Металлоискателем по частным полям — нельзя. Копать лопатой — нельзя. Собираем <b>с поверхности</b>.</p>"+
     "<p>В посевы не заходим: ходим по краям, межам и полевым дорогам.</p>"+
     "<p class='fine'>Газмбурк — памятник археологии: там только смотрим на закат.</p>",
@@ -406,6 +417,30 @@ var COMIC=[
 
 /* ---------- состояние ---------- */
 var S=load(), pos=null, watchId=null, voice=true, lastSpoke={}, page=0;
+var sceneNow="", sceneLayer=0, findFlash=0;
+
+/* кадр зависит от того, где отряд и что уже нашёл */
+function sceneFor(){
+  if(!S.done.q_road)return SCENES.road;
+  if(findFlash>Date.now())return SCENES.find;
+  var q=currentQuest();
+  if(S.done.q_back||(q&&q.id=="q_hazm"))return SCENES.castle;
+  return SCENES.hunt;
+}
+function setScene(src){
+  if(src==sceneNow)return;
+  sceneNow=src;
+  var next=document.getElementById("sc"+(sceneLayer?0:1)),
+      prev=document.getElementById("sc"+sceneLayer);
+  if(!next)return;
+  next.onload=function(){
+    next.classList.add("on"); if(prev)prev.classList.remove("on");
+    sceneLayer=sceneLayer?0:1;
+  };
+  next.src=src;
+  var g=document.getElementById("glitch");
+  if(g){g.classList.remove("go");void g.offsetWidth;g.classList.add("go")}
+}
 
 function blank(){
   return {v:2,players:HEROES.map(function(h){return {n:h.def,c:0,at:0}}),
@@ -596,6 +631,7 @@ function render(){
     var i=new Image();i.src=src;w.appendChild(i);sh.appendChild(w);
   });
 
+  setScene(sceneFor());
   drawMap();
 }
 
@@ -615,7 +651,7 @@ function heroCard(p,i,introMode){
   var left=PW_CD-(Date.now()-(p.at||0)), ready=!p.at||left<=0;
   d.innerHTML=
     (introMode?"":'<button class="minus">−</button>')+
-    AVATARS[i]+
+    '<img class="av" src="'+AVATARS[i]+'" alt="">'+
     '<input class="nm" maxlength="9" value="'+esc(p.n)+'">'+
     '<div class="role">'+esc(h.role)+'</div>'+
     (introMode?'':'<div class="c">'+p.c+'</div><button class="add">+1</button>'+
@@ -626,6 +662,7 @@ function heroCard(p,i,introMode){
   if(!introMode){
     d.querySelector(".add").onclick=function(){
       p.c+=x2on()?2:1;
+      findFlash=Date.now()+22000;
       if(x2on())showSay(p.n.toLowerCase(),"Разлом держит: камень засчитан за два.");
       else showSay(p.n.toLowerCase(),"Камень в кармане. Всего у отряда "+(total())+".");
       save();render();
@@ -687,7 +724,8 @@ function renderIntro(){
   if(box.hidden)return;
   var c=COMIC[page];
   var st=document.getElementById("strip");
-  st.innerHTML='<div class="strip"><div class="kicker">'+c.k+'</div><h2>'+c.h+'</h2>'+c.b+
+  st.innerHTML='<div class="strip">'+(c.art?'<img class="art" src="'+c.art+'" alt="">':'')+
+    '<div class="kicker">'+c.k+'</div><h2>'+c.h+'</h2>'+c.b+
     (c.bub?'<div class="bubble" style="margin-bottom:0"><span class="who">'+esc(c.bub[0])+'</span>'+esc(c.bub[1])+'</div>':'')+
     '</div>';
   if(c.type=="names"){
